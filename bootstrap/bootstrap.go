@@ -1,4 +1,4 @@
-package particle
+package bootstrap
 
 import (
 	"math/rand"
