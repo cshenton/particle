@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	numParticles = 1e6    // Number of particles
-	numData      = 100    // Number of data points
-	trueSd       = 10.0   // The known, true standard deviation of the distribution
-	trueMean     = -18.55 // The unknown, true mean of the distribution
+	numParticles = 1e4  // Number of particles
+	numData      = 100  // Number of data points
+	trueSd       = 5.0  // The known, true standard deviation of the distribution
+	trueMean     = 6.78 // The unknown, true mean of the distribution
 )
 
 func main() {

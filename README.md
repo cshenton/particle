@@ -19,3 +19,24 @@ point here is just to define the simplest interface against which we can build a
 filter.
 
 See `main.go` for a quick example doing posterior inference on a normal mean.
+
+## Some thoughts
+
+There are a couple of things we can do to accelerate this:
+
+- Simple parallelisation of sample, likelihood, and resample steps
+- Anytime asynchronous implementation to avoid worker blocking on weight normalisation
+
+These will enable us to increase data throughput by efficient utilising multiple cpu cores,
+and are even amenable to a distributed implementation. The anytime implementation effectively
+ties an worker to a particle subset of particles.
+
+So in the maximum throughput setting, we could essentially have a cpu core per particle,
+and the throughput would be the cost of a single particle sample plus communication overheads.
+
+On the other end of the spectrum, a single CPU core is responsible for a large number of particles.
+Potentially it's such a large number of particles that it would be daft to hold it in memory.
+In such a case we could just use an embedded DB to load off main memory.
+
+If implemented properly this wouldn't damage throughput, we could simply have an excess of worker
+processes so that a particle can always be processed while another worker is doing IO to disk.
