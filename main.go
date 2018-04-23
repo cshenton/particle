@@ -4,32 +4,23 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
+	"time"
 
 	"github.com/cshenton/particle/bootstrap"
 )
 
 const (
-	priorSd      = 100.0 // Standard deviation of prior on mean
-	numParticles = 1000  // Number of particles
-	numData      = 100   // Number of data points
-	trueSd       = 10.0  // The known, true standard deviation of the distribution
-	trueMean     = 45.32 // The unknown, true mean of the distribution
+	numParticles = 1e6    // Number of particles
+	numData      = 100    // Number of data points
+	trueSd       = 10.0   // The known, true standard deviation of the distribution
+	trueMean     = -18.55 // The unknown, true mean of the distribution
 )
 
-var pre = 1 / math.Sqrt(2*math.Pi) // Pre-computed standard normal prefix
-
 func main() {
-	// Make our filter
-	p := func() []float64 { return []float64{rand.NormFloat64() * priorSd} }
-	s := func(x []float64) []float64 { return x }
-	l := func(y, x []float64) float64 {
-		z := (y[0] - x[0]) / trueSd
-		p := pre * math.Exp(-math.Pow(z, 2)/2)
-		return p
-	}
-	b := bootstrap.New(numParticles, p, s, l)
+	// Create model, bootstrap filter
+	m := bootstrap.NewNormalModel(trueSd)
+	b := bootstrap.New(numParticles, m)
 
 	// Generate some data to do inference against.
 	y := make([]float64, numData)
@@ -37,10 +28,12 @@ func main() {
 		y[i] = trueMean + rand.NormFloat64()*trueSd
 	}
 
-	// Do inference with the bootstrap filter
+	// Perform and time inference
+	t := time.Now()
 	for i := range y {
 		b.Update(y[i : i+1])
 	}
 
-	fmt.Println("Inferred Mean:", b.Mean())
+	fmt.Printf("%v updates with %v particles each in %v\n", numData, numParticles, time.Now().Sub(t))
+	fmt.Printf("True Mean %v, Inferred Mean %v\n", trueMean, b.Mean()[0])
 }
