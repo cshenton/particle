@@ -12,6 +12,8 @@ var (
 )
 
 // NormalModel models a normal distribution with known sd and unknown mean.
+// Since this has no transition dynamics, this will suffer from particle degeneracy
+// if trained using the standard particle filter.
 type NormalModel struct {
 	Sd float64
 }

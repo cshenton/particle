@@ -1,5 +1,7 @@
 // This is a simple example using the bootstrap filter to do inference against the
 // unknown mean of samples from a normal distribution with known standard deviation.
+// Of course it's totally silly to use a particle filter for this, since we'll suffer
+// from particle degeneracy.
 package main
 
 import (
@@ -11,7 +13,7 @@ import (
 )
 
 const (
-	numParticles = 1e4  // Number of particles
+	numParticles = 1e5  // Number of particles
 	numData      = 100  // Number of data points
 	trueSd       = 5.0  // The known, true standard deviation of the distribution
 	trueMean     = 6.78 // The unknown, true mean of the distribution

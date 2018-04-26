@@ -22,10 +22,10 @@ See `main.go` for a quick example doing posterior inference on a normal mean.
 
 ## Some thoughts
 
-There are a couple of things we can do to accelerate this:
+Let's assume we're limited to running this on the CPU, what are our options to speed things up?
 
 - Simple parallelisation of sample, likelihood, and resample steps
-- Anytime asynchronous implementation to avoid worker blocking on weight normalisation
+- Asynchronous implementation to avoid worker blocking on weight normalisation
 
 These will enable us to increase data throughput by efficient utilising multiple cpu cores,
 and are even amenable to a distributed implementation. The anytime implementation effectively
